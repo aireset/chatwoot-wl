@@ -6,12 +6,6 @@
 
 name: Publish Chatwoot docker images for ARM64
 on:
-  push:
-    branches:
-      - develop
-      - master
-    tags:
-      - v*
   workflow_dispatch:
 
 jobs:
