@@ -3,6 +3,7 @@ class DashboardController < ActionController::Base
 
   before_action :set_application_pack
   before_action :set_global_config
+  before_action :set_dashboard_scripts
   around_action :switch_locale
   before_action :ensure_installation_onboarding, only: [:index]
   before_action :render_hc_if_custom_domain, only: [:index]
@@ -31,8 +32,12 @@ class DashboardController < ActionController::Base
       'LOGOUT_REDIRECT_LINK',
       'DISABLE_USER_PROFILE_UPDATE',
       'DEPLOYMENT_ENV',
-      'CSML_EDITOR_HOST'
+      'CSML_EDITOR_HOST', 'CONVESATION_STYLE_CSS'
     ).merge(app_config)
+  end
+
+  def set_dashboard_scripts
+    @dashboard_scripts = GlobalConfig.get_value('DASHBOARD_SCRIPTS')
   end
 
   def ensure_installation_onboarding
@@ -58,7 +63,7 @@ class DashboardController < ActionController::Base
       FB_APP_ID: GlobalConfigService.load('FB_APP_ID', ''),
       FACEBOOK_API_VERSION: GlobalConfigService.load('FACEBOOK_API_VERSION', 'v18.0'),
       IS_ENTERPRISE: ChatwootApp.enterprise?,
-      AZURE_APP_ID: ENV.fetch('AZURE_APP_ID', ''),
+      AZURE_APP_ID: GlobalConfigService.load('AZURE_APP_ID', ''),
       GIT_SHA: GIT_HASH
     }
   end

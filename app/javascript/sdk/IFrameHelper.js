@@ -68,7 +68,6 @@ export const IFrameHelper = {
       'camera;microphone;fullscreen;display-capture;picture-in-picture;clipboard-write;';
     iframe.id = 'chatwoot_live_chat_widget';
     iframe.style.visibility = 'hidden';
-    iframe.style.colorScheme = 'normal';
 
     let holderClassName = `woot-widget-holder woot--hide woot-elements--${window.$chatwoot.position}`;
     if (window.$chatwoot.hideMessageBubble) {
@@ -79,6 +78,7 @@ export const IFrameHelper = {
     }
 
     addClasses(widgetHolder, holderClassName);
+    widgetHolder.id = 'cw-widget-holder';
     widgetHolder.appendChild(iframe);
     body.appendChild(widgetHolder);
     IFrameHelper.initPostMessageCommunication();
@@ -160,6 +160,7 @@ export const IFrameHelper = {
         showPopoutButton: window.$chatwoot.showPopoutButton,
         widgetStyle: window.$chatwoot.widgetStyle,
         darkMode: window.$chatwoot.darkMode,
+        showUnreadMessagesDialog: window.$chatwoot.showUnreadMessagesDialog,
         campaignsSnoozedTill,
       });
       IFrameHelper.onLoad({
