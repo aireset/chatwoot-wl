@@ -153,6 +153,13 @@ RSpec.describe ConversationReplyMailer do
       it 'updates the source_id' do
         expect(mail.message_id).to eq message.source_id
       end
+
+#nwe code
+      context 'with previous message' do
+        let!(:prev_message) { create(:message, conversation: conversation, account: account, message_type: 'incoming', content: 'Prev Message') }
+
+        it { expect(mail.decoded).to include prev_message.content }
+      end
     end
 
     context 'when smtp enabled for email channel' do
@@ -279,6 +286,22 @@ RSpec.describe ConversationReplyMailer do
         mail = described_class.email_reply(message)
         expect(mail.delivery_method.settings.empty?).to be false
         expect(mail.delivery_method.settings[:address]).to eq 'smtp.office365.com'
+        expect(mail.delivery_method.settings[:port]).to eq 587
+      end
+    end
+
+    context 'when smtp enabled for google email channel' do
+      let(:ms_smtp_email_channel) do
+        create(:channel_email, imap_login: 'smtp@gmail.com',
+                               imap_enabled: true, account: account, provider: 'google', provider_config: { access_token: 'access_token' })
+      end
+      let(:conversation) { create(:conversation, assignee: agent, inbox: ms_smtp_email_channel.inbox, account: account).reload }
+      let(:message) { create(:message, conversation: conversation, account: account, message_type: 'outgoing', content: 'Outgoing Message 2') }
+
+      it 'use smtp mail server' do
+        mail = described_class.email_reply(message)
+        expect(mail.delivery_method.settings.empty?).to be false
+        expect(mail.delivery_method.settings[:address]).to eq 'smtp.gmail.com'
         expect(mail.delivery_method.settings[:port]).to eq 587
       end
     end
