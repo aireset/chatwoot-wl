@@ -6,18 +6,12 @@
 
 name: Publish Chatwoot docker images for AMD64
 on:
-  push:
-    branches:
-      - develop
-      - master
-    tags:
-      - v*
   workflow_dispatch:
 
 jobs:
   build:
-    #runs-on: ubuntu-latest
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+    #runs-on: self-hosted
     env:
       GIT_REF: ${{ github.head_ref || github.ref_name }} # ref_name to get tags/branches
     steps:
@@ -53,4 +47,3 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ${{ env.DOCKER_TAG }}
-      
