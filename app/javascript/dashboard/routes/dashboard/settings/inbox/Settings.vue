@@ -21,6 +21,9 @@
       </woot-tabs>
     </setting-intro-banner>
 
+    <microsoft-reauthorize v-if="microsoftUnauthorized" :inbox="inbox" />
+    <facebook-reauthorize v-if="facebookUnauthorized" :inbox="inbox" />
+
     <div v-if="selectedTabKey === 'inbox_settings'" class="mx-8">
       <settings-section
         :title="$t('INBOX_MGMT.SETTINGS_POPUP.INBOX_UPDATE_TITLE')"
@@ -287,7 +290,7 @@
         <label v-if="isAWebWidgetInbox">
           {{ $t('INBOX_MGMT.FEATURES.LABEL') }}
         </label>
-        <div v-if="isAWebWidgetInbox" class="pt-2 pb-4 flex gap-2">
+        <div v-if="isAWebWidgetInbox" class="flex gap-2 pt-2 pb-4">
           <input
             v-model="selectedFeatureFlags"
             type="checkbox"
@@ -298,7 +301,7 @@
             {{ $t('INBOX_MGMT.FEATURES.DISPLAY_FILE_PICKER') }}
           </label>
         </div>
-        <div v-if="isAWebWidgetInbox" class="pb-4 flex gap-2">
+        <div v-if="isAWebWidgetInbox" class="flex gap-2 pb-4">
           <input
             v-model="selectedFeatureFlags"
             type="checkbox"
@@ -309,7 +312,7 @@
             {{ $t('INBOX_MGMT.FEATURES.DISPLAY_EMOJI_PICKER') }}
           </label>
         </div>
-        <div v-if="isAWebWidgetInbox" class="pb-4 flex gap-2">
+        <div v-if="isAWebWidgetInbox" class="flex gap-2 pb-4">
           <input
             v-model="selectedFeatureFlags"
             type="checkbox"
@@ -320,7 +323,7 @@
             {{ $t('INBOX_MGMT.FEATURES.ALLOW_END_CONVERSATION') }}
           </label>
         </div>
-        <div v-if="isAWebWidgetInbox" class="pb-4 flex gap-2">
+        <div v-if="isAWebWidgetInbox" class="flex gap-2 pb-4">
           <input
             v-model="selectedFeatureFlags"
             type="checkbox"
@@ -397,7 +400,6 @@
           @click="updateInbox"
         />
       </settings-section>
-      <facebook-reauthorize v-if="isAFacebookInbox" :inbox-id="inbox.id" />
     </div>
 
     <div v-if="selectedTabKey === 'collaborators'" class="mx-8">
@@ -418,6 +420,9 @@
     <div v-if="selectedTabKey === 'botConfiguration'">
       <bot-configuration :inbox="inbox" />
     </div>
+    <div v-if="selectedTabKey === 'unoApiConfiguration'">
+      <unoapi-configuration :inbox="inbox" />
+    </div>
   </div>
 </template>
 
@@ -435,8 +440,10 @@ import WeeklyAvailability from './components/WeeklyAvailability.vue';
 import GreetingsEditor from 'shared/components/GreetingsEditor.vue';
 import ConfigurationPage from './settingsPage/ConfigurationPage.vue';
 import CollaboratorsPage from './settingsPage/CollaboratorsPage.vue';
+import MicrosoftReauthorize from './channels/microsoft/Reauthorize.vue';
 import WidgetBuilder from './WidgetBuilder.vue';
 import BotConfiguration from './components/BotConfiguration.vue';
+import UnoapiConfiguration from './settingsPage/UnoapiConfiguration.vue';
 import { FEATURE_FLAGS } from '../../../../featureFlags';
 import SenderNameExamplePreview from './components/SenderNameExamplePreview.vue';
 
@@ -453,6 +460,8 @@ export default {
     WeeklyAvailability,
     WidgetBuilder,
     SenderNameExamplePreview,
+    MicrosoftReauthorize,
+    UnoapiConfiguration,
   },
   mixins: [alertMixin, configMixin, inboxMixin],
   data() {
@@ -500,6 +509,9 @@ export default {
       if (this.isATwilioWhatsAppChannel) {
         return this.$t('INBOX_MGMT.ADD.WHATSAPP.PROVIDERS.TWILIO');
       }
+      if (this.isAUnoapiChannel) {
+        return this.$t('INBOX_MGMT.ADD.WHATSAPP.PROVIDERS.UNOAPI');
+      }
       return '';
     },
     tabs() {
@@ -532,14 +544,26 @@ export default {
         ];
       }
 
+      if (this.isAUnoapiChannel) {
+        visibleToAllChannelTabs = [
+          ...visibleToAllChannelTabs,
+          {
+            key: 'unoApiConfiguration',
+            name: this.$t('INBOX_MGMT.TABS.UNOAPI_CONFIGURATION'),
+          },
+        ];
+      }
+
       if (
-        this.isATwilioChannel ||
-        this.isALineChannel ||
-        this.isAPIInbox ||
-        (this.isAnEmailChannel && !this.inbox.provider) ||
-        (this.isAnEmailChannel && this.inbox.provider === 'microsoft') ||
-        this.isAWhatsAppChannel ||
-        this.isAWebWidgetInbox
+        (this.isATwilioChannel ||
+          this.isALineChannel ||
+          this.isAPIInbox ||
+          (this.isAnEmailChannel && !this.inbox.provider) ||
+          this.isAMicrosoftInbox ||
+          this.isAGoogleInbox ||
+          this.isAWhatsAppChannel ||
+          this.isAWebWidgetInbox) &&
+        !this.isAUnoapiChannel
       ) {
         visibleToAllChannelTabs = [
           ...visibleToAllChannelTabs,
@@ -613,6 +637,12 @@ export default {
       )
         return true;
       return false;
+    },
+    microsoftUnauthorized() {
+      return this.isAMicrosoftInbox && this.inbox.reauthorization_required;
+    },
+    facebookUnauthorized() {
+      return this.isAFacebookInbox && this.inbox.reauthorization_required;
     },
   },
   watch: {

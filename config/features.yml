@@ -83,9 +83,9 @@
 - name: help_center_embedding_search
   enabled: false
   premium: true
-- name: hide_all_chats_for_agent
+- name: linear_integration
   enabled: false
-- name: hide_unassigned_for_agent
+- name: hide_all_chats_for_agent
   enabled: false
 - name: hide_contacts_for_agent
   enabled: false
@@ -98,4 +98,20 @@
 - name: disable_whatsapp_messaging_window
   enabled: false
 - name: agent_conversation_viewed
+  enabled: true
+- name: hide_unassigned_for_agent
+  enabled: false
+- name: hide_all_inbox_for_agent
+  enabled: false
+# - name: channel_notifica_me
+#   enabled: false
+- name: channel_sms
+  enabled: false
+- name: channel_whatsapp
+  enabled: true
+- name: channel_telegram
+  enabled: false
+- name: channel_line
+  enabled: false
+- name: channel_api
   enabled: true

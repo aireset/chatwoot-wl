@@ -20,10 +20,11 @@
 #  conversation_id           :integer          not null
 #  inbox_id                  :integer          not null
 #  sender_id                 :bigint
-#  source_id                 :string
+#  source_id                 :string(510)
 #
 # Indexes
 #
+#  index_messages_on_account_created_type               (account_id,created_at,message_type)
 #  index_messages_on_account_id                         (account_id)
 #  index_messages_on_account_id_and_inbox_id            (account_id,inbox_id)
 #  index_messages_on_additional_attributes_campaign_id  (((additional_attributes -> 'campaign_id'::text))) USING gin
@@ -73,6 +74,7 @@ class Message < ApplicationRecord
 
   validates :content_type, presence: true
   validates :content, length: { maximum: 150_000 }
+  validates :source_id, length: { maximum: 510 }
   validates :processed_message_content, length: { maximum: 150_000 }
 
   # when you have a temperory id in your frontend and want it echoed back via action cable
@@ -102,7 +104,7 @@ class Message < ApplicationRecord
   # [:external_error : Can specify if the message creation failed due to an error at external API
   store :content_attributes, accessors: [:submitted_email, :items, :submitted_values, :email, :in_reply_to, :deleted,
                                          :external_created_at, :story_sender, :story_id, :external_error,
-                                         :translations, :in_reply_to_external_id, :is_unsupported], coder: JSON
+                                         :translations, :in_reply_to_external_id, :in_reply_to_interactive_id, :is_unsupported], coder: JSON
 
   store :external_source_ids, accessors: [:slack], coder: JSON, prefix: :external_source_id
 
@@ -267,12 +269,13 @@ class Message < ApplicationRecord
   # fetch the in_reply_to message and set the external id
   def ensure_in_reply_to
     in_reply_to = content_attributes[:in_reply_to]
-    in_reply_to_external_id = content_attributes[:in_reply_to_external_id]
+    in_reply_to_interactive_id = content_attributes[:in_reply_to_interactive_id]
 
     Messages::InReplyToMessageBuilder.new(
       message: self,
       in_reply_to: in_reply_to,
-      in_reply_to_external_id: in_reply_to_external_id
+      in_reply_to_external_id: in_reply_to_external_id,
+      in_reply_to_interactive_id: in_reply_to_interactive_id
     ).perform
   end
 
