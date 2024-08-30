@@ -61,13 +61,9 @@ export const createBubbleHolder = hideMessageBubble => {
     addClasses(bubbleHolder, 'woot-hidden');
   }
   addClasses(bubbleHolder, 'woot--bubble-holder');
+  bubbleHolder.style = 'overflow: hidden;';
   bubbleHolder.id = 'cw-bubble-holder';
   body.appendChild(bubbleHolder);
-};
-
-export const createNotificationBubble = () => {
-  addClasses(notificationBubble, 'woot--notification');
-  return notificationBubble;
 };
 
 export const onBubbleClick = (props = {}) => {

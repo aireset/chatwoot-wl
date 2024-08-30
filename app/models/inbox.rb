@@ -10,6 +10,7 @@
 #  auto_assignment_config        :jsonb
 #  business_name                 :string
 #  channel_type                  :string
+#  csat_response_visible         :boolean          default(FALSE), not null
 #  csat_survey_enabled           :boolean          default(FALSE)
 #  email_address                 :string
 #  enable_auto_assignment        :boolean          default(TRUE)
@@ -125,16 +126,21 @@ class Inbox < ApplicationRecord
     channel_type == 'Channel::Whatsapp'
   end
 
-  def notifica_me?
-    channel_type == 'Channel::NotificaMe'
-  end
-
   def assignable_agents
     (account.users.where(id: members.select(:user_id)) + account.administrators).uniq
   end
 
   def active_bot?
-    agent_bot_inbox&.active? || hooks.where(app_id: 'dialogflow', status: 'enabled').count.positive?
+    agent_bot_inbox&.active? || hooks.where(app_id: %w[dialogflow],
+                                            status: 'enabled').count.positive? || captain_enabled?
+  end
+
+  def captain_enabled?
+    captain_hook = account.hooks.where(
+      app_id: %w[captain], status: 'enabled'
+    ).first
+
+    captain_hook.present? && captain_hook.settings['inbox_ids'].split(',').include?(id.to_s)
   end
 
   def inbox_type
@@ -158,8 +164,6 @@ class Inbox < ApplicationRecord
       "#{ENV.fetch('FRONTEND_URL', nil)}/webhooks/line/#{channel.line_channel_id}"
     when 'Channel::Whatsapp'
       "#{ENV.fetch('FRONTEND_URL', nil)}/webhooks/whatsapp/#{channel.phone_number}"
-    when 'Channel::NotificaMe'
-      "#{ENV.fetch('FRONTEND_URL', nil)}/webhooks/notifica_me/#{channel.notifica_me_id}"
     end
   end
 
