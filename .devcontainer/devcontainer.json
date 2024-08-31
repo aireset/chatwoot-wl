@@ -6,6 +6,7 @@
   "settings": {
     "terminal.integrated.shell.linux": "/bin/zsh"
   },
+	"workspaceFolder": "/workspaces",
 
 
   // Add the IDs of extensions you want installed when the container is created.
