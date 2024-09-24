@@ -1,14 +1,15 @@
 name: Log Lines Percentage Check
 
 on:
-  pull_request:
-    branches:
-      - develop
+  workflow_dispatch:
+  # pull_request:
+  #   branches:
+  #     - develop
 
 jobs:
   log_lines_check:
-    #runs-on: ubuntu-latest
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+    #runs-on: self-hosted
 
     steps:
       - name: Checkout repository
