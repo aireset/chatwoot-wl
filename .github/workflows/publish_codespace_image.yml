@@ -15,11 +15,11 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: ${{ secrets.GITH_TOKEN }}
 
     - name: Build the Codespace Base Image
       run: |
         docker-compose -f .devcontainer/docker-compose.yml build base
-        docker tag base:latest ghcr.io/sendingtk/chatwoot_codespace:latest
-        docker push ghcr.io/sendingtk/chatwoot_codespace:latest
+        docker tag chatwoot:base ghcr.io/aireset/chatwoot_codespace:latest
+        docker push ghcr.io/aireset/chatwoot_codespace:latest
 

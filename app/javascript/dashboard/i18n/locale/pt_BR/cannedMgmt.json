@@ -1,35 +1,36 @@
 {
   "CANNED_MGMT": {
-    "HEADER": "Respostas Prontas",
-    "LEARN_MORE": "Saiba mais sobre respostas prontas",
-    "DESCRIPTION": "Respostas Prontas são modelos de resposta pré-escritos que ajudam você a responder rapidamente a uma conversa. Os agentes podem digitar o caractere '/' seguido pelo código curto para inserir uma resposta pronta durante uma conversa.",
+    "HEADER": "Atalhos",
+    "LEARN_MORE": "Learn more about canned responses",
+    "DESCRIPTION": "Respostas prontas são modelos de resposta pré-escritos que ajudam a responder rapidamente a uma conversa. Os agentes podem digitar barra '/' seguido pelo código curto para inserir uma resposta pronta durante uma conversa.",
     "HEADER_BTN_TXT": "Adicionar resposta pronta",
     "LOADING": "Buscando respostas prontas...",
-    "SEARCH_404": "Não há itens correspondentes a esta consulta.",
+    "SEARCH_404": "Não existem itens correspondentes a esta consulta.",
+    "SIDEBAR_TXT": "<p><b>Respostas Prontas</b></p> <p>As Respostas Prontas são modelos de respostas predefinidas que ajudam você a responder rapidamente a uma conversa. Para inserir uma resposta pronta durante um chat, os agentes podem digitar um código curto precedido por uma barra '/'.</p> <p>Você pode gerenciar suas respostas prontas desta página ou criar novas usando o botão ",
     "LIST": {
-      "404": "Não há respostas prontas disponíveis nesta conta.",
-      "TITLE": "Gerenciar respostas prontas",
-      "DESC": "Respostas Prontas são modelos de resposta predefinidos que podem ser usados para enviar rapidamente respostas a conversas.",
+      "404": "Não há atalhos disponíveis nesta conta.",
+      "TITLE": "Gerenciar Atalhos",
+      "DESC": "Respostas Prontas são modelos de resposta predefinidas que podem ser usados para enviar respostas rapidamente durante conversas.",
       "TABLE_HEADER": [
-        "Código curto",
-        "Conteúdo",
+        "Atalho",
+        "Mensagem",
         "Ações"
       ]
     },
     "ADD": {
       "TITLE": "Adicionar resposta pronta",
-      "DESC": "Respostas Prontas são modelos de resposta predefinidos que podem ser usados para enviar rapidamente respostas a conversas.",
+      "DESC": "Respostas Prontas são modelos de resposta predefinidas que podem ser usados para enviar respostas rapidamente durante conversas.",
       "CANCEL_BUTTON_TEXT": "Cancelar",
       "FORM": {
         "SHORT_CODE": {
-          "LABEL": "Código curto",
-          "PLACEHOLDER": "Por favor, insira um código curto.",
-          "ERROR": "Código curto é obrigatório."
+          "LABEL": "Atalho",
+          "PLACEHOLDER": "Por favor, insira um atalho.",
+          "ERROR": "O Atalho é obrigatório."
         },
         "CONTENT": {
-          "LABEL": "Mensagem",
-          "PLACEHOLDER": "Por favor, escreva a mensagem que você deseja salvar como um modelo para usar mais tarde.",
-          "ERROR": "Mensagem é obrigatória."
+          "LABEL": "Messagem",
+          "PLACEHOLDER": "Por favor, escreva a mensagem que deseja salvar como um modelo para usar posteriormente.",
+          "ERROR": "A mensagem é obrigatória."
         },
         "SUBMIT": "Enviar"
       },
@@ -43,18 +44,18 @@
       "CANCEL_BUTTON_TEXT": "Cancelar",
       "FORM": {
         "SHORT_CODE": {
-          "LABEL": "Código curto",
-          "PLACEHOLDER": "Por favor, insira um código curto.",
-          "ERROR": "Código curto é obrigatório."
+          "LABEL": "Atalho",
+          "PLACEHOLDER": "Por favor, insira um atalho.",
+          "ERROR": "O Atalho é obrigatório."
         },
         "CONTENT": {
-          "LABEL": "Mensagem",
-          "PLACEHOLDER": "Por favor, escreva a mensagem que você deseja salvar como um modelo para usar mais tarde.",
-          "ERROR": "Mensagem é obrigatória."
+          "LABEL": "Messagem",
+          "PLACEHOLDER": "Por favor, escreva a mensagem que deseja salvar como um modelo para usar posteriormente.",
+          "ERROR": "A mensagem é obrigatória."
         },
         "SUBMIT": "Enviar"
       },
-      "BUTTON_TEXT": "Editar",
+      "BUTTON_TEXT": "Alterar",
       "API": {
         "SUCCESS_MESSAGE": "Resposta pronta atualizada com sucesso.",
         "ERROR_MESSAGE": "Não foi possível conectar ao servidor Woot. Por favor, tente novamente."
@@ -63,12 +64,12 @@
     "DELETE": {
       "BUTTON_TEXT": "Excluir",
       "API": {
-        "SUCCESS_MESSAGE": "Resposta pronta excluída com sucesso.",
+        "SUCCESS_MESSAGE": "Resposta pronta deletada com sucesso.",
         "ERROR_MESSAGE": "Não foi possível conectar ao servidor Woot. Por favor, tente novamente."
       },
       "CONFIRM": {
         "TITLE": "Confirmar exclusão",
-        "MESSAGE": "Você tem certeza de que deseja excluir ",
+        "MESSAGE": "Você tem certeza que deseja excluir ",
         "YES": "Sim, excluir ",
         "NO": "Não, manter "
       }

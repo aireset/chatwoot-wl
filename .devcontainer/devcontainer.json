@@ -6,8 +6,8 @@
   "settings": {
     "terminal.integrated.shell.linux": "/bin/zsh"
   },
-	"workspaceFolder": "/workspaces",
 
+	"workspaceFolder": "/workspaces",
 
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
@@ -20,11 +20,10 @@
     "mrmlnc.vscode-duplicate"
   ],
 
-
   // 5432 postgres
   // 6379 redis
   // 1025,8025 mailhog
-  "forwardPorts": [8025, 3000, 3035],
+  "forwardPorts": [8025, 3000, 3035, 5432, 6379],
 
   "postCreateCommand": ".devcontainer/scripts/setup.sh && POSTGRES_STATEMENT_TIMEOUT=600s bundle exec rake db:chatwoot_prepare && yarn",
   "portsAttributes": {

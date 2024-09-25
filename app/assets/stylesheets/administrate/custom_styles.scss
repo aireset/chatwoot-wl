@@ -22,3 +22,38 @@
 .feature-container {
   max-width: 100rem;
 }
+
+
+.form-check-input {
+  width: 3em;
+  height: 1.5em;
+  background-color: #6c757d; /* Default color for the switch */
+  border-radius: 20px;
+  position: relative;
+}
+
+.form-check-input:checked {
+  background-color: #198754; /* Color when checked */
+}
+
+.form-check-input::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 1.2em;
+  height: 1.2em;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.form-check-input:checked::before {
+  transform: translateX(1.5em);
+}
+
+.form-check-label {
+  margin-left: 5px;
+  font-weight: normal;
+  cursor: pointer;
+}
