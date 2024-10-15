@@ -1,0 +1,92 @@
+# Definir a base da imagem
+ARG VARIANT="ubuntu-22.04"
+FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
+
+# Definir variáveis de ambiente
+ARG NODE_VERSION="20"
+ARG RUBY_VERSION="3.3.3"
+ARG USER_UID="1000"
+ARG USER_GID="1000"
+
+# Atualizar UID e GID do usuário vscode, se necessário
+RUN if [ "$USER_GID" != "1000" ] || [ "$USER_UID" != "1000" ]; then \
+        groupmod --gid $USER_GID vscode \
+        && usermod --uid $USER_UID --gid $USER_GID vscode \
+        && chown -R $USER_UID:$USER_GID /home/vscode; \
+    fi
+
+# Instalar dependências do sistema
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+  && apt-get -y install --no-install-recommends \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    gnupg2 \
+    tar \
+    tzdata \
+    postgresql-client \
+    libpq-dev \
+    git \
+    imagemagick \
+    tmux \
+    zsh \
+    git-flow \
+    curl \
+    libyaml-dev \
+    npm
+
+# Instalar gerenciador 'n' para Node.js
+RUN npm install -g n
+
+# Instalar o Node.js 20 usando 'n'
+RUN n ${NODE_VERSION}
+
+# Atualizar PATH para incluir Node.js e npm instalados pelo 'n'
+ENV PATH="/usr/local/bin/:/usr/local/n/versions/node/${NODE_VERSION}/bin:$PATH"
+
+# Verificar a instalação do Node e npm
+RUN node -v && npm -v
+
+# Instalar Yarn
+RUN npm install -g yarn
+
+# Instalar rbenv e Ruby
+RUN git clone https://github.com/rbenv/rbenv.git ~/.rbenv \
+    && echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> /etc/profile.d/rbenv.sh \
+    && echo 'eval \"$(rbenv init -)\"' >> /etc/profile.d/rbenv.sh \
+    && git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build \
+    && ~/.rbenv/plugins/ruby-build/install.sh
+
+# Configurar PATH para tornar o rbenv e o Ruby acessíveis para todos os comandos subsequentes
+ENV PATH="/root/.rbenv/bin:/root/.rbenv/shims:$PATH"
+
+# Instalar a versão do Ruby definida
+RUN rbenv install $RUBY_VERSION && \
+    rbenv global $RUBY_VERSION && \
+    rbenv rehash
+
+# Instalar o Bundler
+RUN rbenv exec gem install bundler
+
+# Instalar GitHub CLI (gh)
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+   && sudo apt update \
+   && sudo apt install gh
+
+# Definir diretório de trabalho
+WORKDIR /workspace
+
+# Copiar arquivos de dependências de Node.js e Ruby
+COPY package.json yarn.lock ./
+COPY Gemfile Gemfile.lock ./
+
+# Instalar dependências do Node.js (Vite, Vue.js)
+RUN yarn install
+
+# Instalar dependências do Ruby (Rails, etc.)
+RUN rbenv exec bundle install
+
+# Instalar Overmind para gerenciamento de processos
+RUN curl -L https://github.com/DarthSim/overmind/releases/download/v2.2.0/overmind-v2.2.0-linux-amd64.gz | gunzip - > /usr/local/bin/overmind \
+    && chmod +x /usr/local/bin/overmind

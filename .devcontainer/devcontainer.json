@@ -3,21 +3,26 @@
   "service": "app",
   "dockerComposeFile": "docker-compose.yml",
 
+  "workspaceFolder": "/workspaces/chatwoot-wl",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/chatwoot-wl,type=bind",
+
   "settings": {
     "terminal.integrated.shell.linux": "/bin/zsh"
   },
 
-	"workspaceFolder": "/workspaces",
-
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-    "rebornix.Ruby",
+    "Shopify.ruby-lsp",
     "misogi.ruby-rubocop",
     "wingrunr21.vscode-ruby",
     "davidpallinder.rails-test-runner",
     "eamodio.gitlens",
     "github.copilot",
-    "mrmlnc.vscode-duplicate"
+    "mrmlnc.vscode-duplicate",
+    "christian-kohler.npm-intellisense",
+    "ms-azuretools.vscode-docker",
+    "antfu.vite",
+    "Vue.volar"
   ],
 
   // 5432 postgres
@@ -25,13 +30,20 @@
   // 1025,8025 mailhog
   "forwardPorts": [8025, 3000, 3035, 5432, 6379],
 
-  "postCreateCommand": ".devcontainer/scripts/setup.sh && POSTGRES_STATEMENT_TIMEOUT=600s bundle exec rake db:chatwoot_prepare && yarn",
+  "postCreateCommand": "chmod +x .devcontainer/scripts/setup.sh && .devcontainer/scripts/setup.sh && POSTGRES_STATEMENT_TIMEOUT=600s bundle exec rake db:chatwoot_prepare && yarn",
+
   "portsAttributes": {
     "3000": {
       "label": "Rails Server"
     },
     "3035": {
       "label": "Webpack Dev Server"
+    },
+    "5432": {
+      "label": "PostgreSql"
+    },
+    "6379": {
+      "label": "Redis"
     },
     "8025": {
       "label": "Mailhog UI"
