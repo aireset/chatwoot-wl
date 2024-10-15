@@ -3,6 +3,6 @@
 FROM ghcr.io/aireset/chatwoot_codespace:latest
 
 # Do the set up required for chatwoot app
-WORKDIR /workspace
+WORKDIR /workspaces/chatwoot-wl
 COPY . /workspace
 RUN yarn && gem install bundler && bundle install
